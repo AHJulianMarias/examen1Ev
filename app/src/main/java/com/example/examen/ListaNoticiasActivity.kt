@@ -39,9 +39,10 @@ class ListaNoticiasActivity: AppCompatActivity(), AdapterView.OnItemSelectedList
         val texto =if (airplaneMode) getString(R.string.modo_avion_activado) else getString(R.string.modo_avion_no_activado)
         Toast.makeText(this,texto, LENGTH_LONG).show()
     }
-    private val arraySpinner = resources.getStringArray(R.array.noticiasOpcion)
-    private var arrayNoticiasTexto = resources.getStringArray(R.array.textoNoticias)
-    private val cuerposNoticias = resources.getStringArray(R.array.cuerposNoticias)
+    private val arraySpinner = arrayOf("Todas","Cultura","Economia", "Politica", "Deportes")
+    private var arrayNoticiasTexto = arrayListOf("Nuevo videojuego", "Bitcoin sube mucho","Pablo Motos enano", "Miguel 100kg en banca")
+    private val cuerposNoticias = arrayOf("El juego llamado spiderman ha salido al mercado", "Bitcoin ha pasado los 100k dolares", "Pablo motos enano narigudo","Miguel mentiroso, no levanta ni 15kg")
+
 
     private val imagenes = intArrayOf(R.mipmap.ic_cyl,R.mipmap.ic_cultura,R.mipmap.ic_economia,R.mipmap.ic_politica,R.mipmap.ic_deportes)
     lateinit var listViewNoticias: ListView
@@ -54,7 +55,7 @@ class ListaNoticiasActivity: AppCompatActivity(), AdapterView.OnItemSelectedList
         val intentAvion = IntentFilter(Intent.ACTION_AIRPLANE_MODE_CHANGED)
         registerReceiver(airplaneReceiver,intentAvion)
 
-        listViewNoticias = findViewById(R.id.listViewNoticias)
+        listViewNoticias = findViewById<ListView>(R.id.listViewNoticias)
         adapter = ArrayAdapter(this, R.layout.fila_list, R.id.textViewFila,arrayNoticiasTexto)
         listViewNoticias.adapter = adapter
         val selectorNoticias = findViewById<Spinner>(R.id.spinner)
@@ -82,25 +83,49 @@ class ListaNoticiasActivity: AppCompatActivity(), AdapterView.OnItemSelectedList
 
 
                 Log.d("Noticia seleccionada", "onItemSelected: Todas")
-
+//                arrayListNoticiasTexto = arrayListOf("Nuevo videojuego", "Bitcoin sube mucho","Pablo Motos enano", "Miguel 100kg en banca")
+//                adapter.notifyDataSetChanged()
 
             }
 
             "Cultura" ->{
                 Log.d("Noticia seleccionada", "onItemSelected: Cultura")
-
+//                val intent = Intent()
+//                while(iterator.hasNext()){
+//                    val item = iterator.next()
+//                    if(item != "Economia"){
+//                        arrayListNoticiasTexto.remove(item)
+//                    }
+//                }
+//                adapter.notifyDataSetChanged()
             }
             "Economia" ->{
 
                 Log.d("Noticia seleccionada", "onItemSelected: Economia")
-
+//                arrayListNoticiasTexto.forEach { noticiaTexto->
+//                    if(noticiaTexto != "Economia"){
+//                        arrayListNoticiasTexto.remove(noticiaTexto)
+//                    }
+//                }
+//                adapter.notifyDataSetChanged()
             }
             "Politica" ->{
-
+//                Log.d("Noticia seleccionada", "onItemSelected: Politica")
+//                arrayListNoticiasTexto.forEach { noticiaTexto->
+//                    if(noticiaTexto != "Politica"){
+//                        arrayListNoticiasTexto.remove(noticiaTexto)
+//                    }
+//                }
+//                adapter.notifyDataSetChanged()
             }
             "Deportes" ->{
                 Log.d("Noticia seleccionada", "onItemSelected: Deportes")
-
+//                arrayListNoticiasTexto.forEach { noticiaTexto->
+//                    if(noticiaTexto != "Deportes"){
+//                        arrayListNoticiasTexto.remove(noticiaTexto)
+//                    }
+//                }
+//                adapter.notifyDataSetChanged()
 
 
             }
@@ -132,9 +157,12 @@ class ListaNoticiasActivity: AppCompatActivity(), AdapterView.OnItemSelectedList
             convertView: View?,
             parent: ViewGroup
         ): View {
-
+            // Crea un objeto LayoutInflater para inflar la vista personalizada desde un diseño XML
             val layoutInflater = LayoutInflater.from(context)
-
+            //Declaro una vista de mi fila, y la preparo para inflarla con datos
+            // Los parametros son: XML descriptivo
+            // Vista padre
+            // Booleano que indica si se debe ceñir a las características del padre
             val rowView =
                 convertView ?: layoutInflater.inflate(R.layout.layout_spinner, parent, false)
 
