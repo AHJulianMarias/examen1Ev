@@ -25,37 +25,27 @@ import androidx.core.view.forEach
 class ListaNoticiasActivity: AppCompatActivity(), AdapterView.OnItemSelectedListener,
     AdapterView.OnItemClickListener {
 
-    private val airplaneReceiver = object : BroadcastReceiver() {
-        override fun onReceive(context: Context?, intent: Intent?) {
-            Log.d("ModoAvion", "Entra en onReceive")
-            getAirplane()
-        }
-    }
 
-    private fun getAirplane(){
-        Log.d("ModoAvion", "Revisa getAirplane")
-        val airplaneMode = Settings.Global.getInt(contentResolver, Settings.Global.AIRPLANE_MODE_ON,0) == 1
-        Log.d("ModoAvion", "valor $airplaneMode")
-        val texto =if (airplaneMode) getString(R.string.modo_avion_activado) else getString(R.string.modo_avion_no_activado)
-        Toast.makeText(this,texto, LENGTH_LONG).show()
-    }
-    private val arraySpinner = arrayOf("Todas","Cultura","Economia", "Politica", "Deportes")
     private var arrayNoticiasTexto = arrayListOf("Nuevo videojuego", "Bitcoin sube mucho","Pablo Motos enano", "Miguel 100kg en banca")
-    private val cuerposNoticias = arrayOf("El juego llamado spiderman ha salido al mercado", "Bitcoin ha pasado los 100k dolares", "Pablo motos enano narigudo","Miguel mentiroso, no levanta ni 15kg")
 
-
-    private val imagenes = intArrayOf(R.mipmap.ic_cyl,R.mipmap.ic_cultura,R.mipmap.ic_economia,R.mipmap.ic_politica,R.mipmap.ic_deportes)
+    private lateinit var arraySpinner: Array<String>
+    private lateinit var cuerposNoticias:Array<String>
+    private lateinit var imagenes:Array<Int>
     lateinit var listViewNoticias: ListView
     lateinit var adapter:ArrayAdapter<String>
+
     lateinit var iterator: MutableIterator<String>
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContentView(R.layout.activity_spinner)
-        val intentAvion = IntentFilter(Intent.ACTION_AIRPLANE_MODE_CHANGED)
-        registerReceiver(airplaneReceiver,intentAvion)
+        arraySpinner = getResources().getStringArray(R.array.noticiasOpcion)
+        imagenes = arrayOf(R.mipmap.ic_cyl,R.mipmap.ic_cultura,R.mipmap.ic_economia,R.mipmap.ic_politica,R.mipmap.ic_deportes)
+        cuerposNoticias = getResources().getStringArray(R.array.cuerposNoticias)
 
-        listViewNoticias = findViewById<ListView>(R.id.listViewNoticias)
+
+
+        listViewNoticias = findViewById(R.id.listViewNoticias)
         adapter = ArrayAdapter(this, R.layout.fila_list, R.id.textViewFila,arrayNoticiasTexto)
         listViewNoticias.adapter = adapter
         val selectorNoticias = findViewById<Spinner>(R.id.spinner)
@@ -78,60 +68,35 @@ class ListaNoticiasActivity: AppCompatActivity(), AdapterView.OnItemSelectedList
     override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
         val noticia = view?.findViewById<TextView>(R.id.nombreNoticia)
         when(noticia?.text.toString()){
-            "Todas"->{
-
-
-
+            arraySpinner[0] -> {
                 Log.d("Noticia seleccionada", "onItemSelected: Todas")
-//                arrayListNoticiasTexto = arrayListOf("Nuevo videojuego", "Bitcoin sube mucho","Pablo Motos enano", "Miguel 100kg en banca")
-//                adapter.notifyDataSetChanged()
-
+                // Mostrar todas las noticias
+                arrayNoticiasTexto = arrayListOf("Nuevo videojuego", "Bitcoin sube mucho", "Pablo Motos enano", "Miguel 100kg en banca")
             }
-
-            "Cultura" ->{
+            arraySpinner[1] -> {
                 Log.d("Noticia seleccionada", "onItemSelected: Cultura")
-//                val intent = Intent()
-//                while(iterator.hasNext()){
-//                    val item = iterator.next()
-//                    if(item != "Economia"){
-//                        arrayListNoticiasTexto.remove(item)
-//                    }
-//                }
-//                adapter.notifyDataSetChanged()
+                // Mostrar noticias relacionadas con Cultura (ejemplo: vacío para este caso)
+                arrayNoticiasTexto = arrayListOf("Nuevo videojuego")
             }
-            "Economia" ->{
-
+            arraySpinner[2] -> {
                 Log.d("Noticia seleccionada", "onItemSelected: Economia")
-//                arrayListNoticiasTexto.forEach { noticiaTexto->
-//                    if(noticiaTexto != "Economia"){
-//                        arrayListNoticiasTexto.remove(noticiaTexto)
-//                    }
-//                }
-//                adapter.notifyDataSetChanged()
+                // Mostrar noticias relacionadas con Economía
+                arrayNoticiasTexto = arrayListOf("Bitcoin sube mucho")
             }
-            "Politica" ->{
-//                Log.d("Noticia seleccionada", "onItemSelected: Politica")
-//                arrayListNoticiasTexto.forEach { noticiaTexto->
-//                    if(noticiaTexto != "Politica"){
-//                        arrayListNoticiasTexto.remove(noticiaTexto)
-//                    }
-//                }
-//                adapter.notifyDataSetChanged()
+            arraySpinner[3] -> {
+                Log.d("Noticia seleccionada", "onItemSelected: Politica")
+                // Mostrar noticias relacionadas con Política
+                arrayNoticiasTexto = arrayListOf("Bitcoin sube mucho") // Según tu ejemplo
             }
-            "Deportes" ->{
+            arraySpinner[4] -> {
                 Log.d("Noticia seleccionada", "onItemSelected: Deportes")
-//                arrayListNoticiasTexto.forEach { noticiaTexto->
-//                    if(noticiaTexto != "Deportes"){
-//                        arrayListNoticiasTexto.remove(noticiaTexto)
-//                    }
-//                }
-//                adapter.notifyDataSetChanged()
-
-
+                // Mostrar noticias relacionadas con Deportes
+                arrayNoticiasTexto = arrayListOf("Miguel 100kg en banca")
             }
-
         }
-
+        adapter.clear()
+        adapter.addAll(arrayNoticiasTexto)
+        adapter.notifyDataSetChanged()
     }
 
     override fun onNothingSelected(parent: AdapterView<*>?) {
@@ -178,10 +143,6 @@ class ListaNoticiasActivity: AppCompatActivity(), AdapterView.OnItemSelectedList
 
     override fun onItemClick(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
         TODO("Not yet implemented")
-    }
-    override fun onDestroy() {
-        super.onDestroy()
-        unregisterReceiver(airplaneReceiver)
     }
 
 }

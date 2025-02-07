@@ -17,21 +17,6 @@ import androidx.appcompat.app.AppCompatActivity
 
 
 class contenidoNoticiasActivity: AppCompatActivity() {
-    private val airplaneReceiver = object : BroadcastReceiver() {
-        override fun onReceive(context: Context?, intent: Intent?) {
-            Log.d("ModoAvion", "Entra en onReceive")
-            getAirplane()
-        }
-    }
-
-    private fun getAirplane(){
-        Log.d("ModoAvion", "Revisa getAirplane")
-        val airplaneMode = Settings.Global.getInt(contentResolver, Settings.Global.AIRPLANE_MODE_ON,0) == 1
-        Log.d("ModoAvion", "valor $airplaneMode")
-        val texto =if (airplaneMode) getString(R.string.modo_avion_activado) else getString(R.string.modo_avion_no_activado)
-        Toast.makeText(this,texto, LENGTH_LONG).show()
-    }
-
 
     lateinit var viewTitulo: TextView
     lateinit var viewContenido:TextView
@@ -47,9 +32,7 @@ class contenidoNoticiasActivity: AppCompatActivity() {
         viewTitulo = findViewById(R.id.textViewTitulo)
         viewContenido = findViewById(R.id.textViewContenido)
 
-        //AVION
-        val intentAvion = IntentFilter(Intent.ACTION_AIRPLANE_MODE_CHANGED)
-        registerReceiver(airplaneReceiver,intentAvion)
+
         if(savedInstanceState != null){
             viewTitulo.text = savedInstanceState.getString(KEY_TITULO)
             viewContenido.text = savedInstanceState.getString(KEY_CONTENIDO)
@@ -81,18 +64,6 @@ class contenidoNoticiasActivity: AppCompatActivity() {
         // Guardamos el progreso actual del SeekBar en el Bundle
         outState.putString(KEY_CONTENIDO, viewContenido.text.toString())
     }
-    override fun onDestroy() {
-        super.onDestroy()
-        unregisterReceiver(airplaneReceiver)
-    }
-//    private val requestPermissionLauncher = registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted: Boolean ->
-//        // Este bloque de código se ejecuta cuando el usuario ha respondido a la solicitud de permiso.
-//        if (isGranted) {
-//            // Si el permiso fue concedido, entonces podemos proceder con la acción que requiere dicho permiso.
-////            takePicturePreviewLauncher.launch(null)
-//        } else {
-//            // Si el permiso fue denegado, mostramos un mensaje al usuario.
-//            Toast.makeText(this, "Camera permission is required to take pictures", Toast.LENGTH_LONG).show()
-//        }
-//    }
+
+
 }
